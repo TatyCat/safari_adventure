@@ -85,6 +85,35 @@ loop do
         puts "Record upated for #{spotted_species}'s last location to be: #{spotted_species_result.last_seen_location}"
   end
 
+  if selection == 'extinct'
+    #ask user for location
 
-#Hilltop on the Mountainside...near Publix
+    puts "what location do you want to say goodbye to?:"
+    #save location answer to a var
+
+    user_location = gets.chomp
+    #search the DB based on the var
+
+    user_location_result = Animal.where(last_seen_location: "#{user_location}")
+    #return all answers based on location var
+    #if NOT found, puts "A Record For locations at #{user_location} Not Found"
+    if user_location_result.exists? == false
+        puts "No records found for the location: #{user_location}."
+    elsif user_location_result.exists? == true
+    #if found, delete all species found at the searched loc. from the db
+        user_location_result.each do |now_extinct|
+          puts "#{now_extinct.species} will be deleted"
+        end
+        user_location_result.delete_all
+        puts "Deletion Complete"
+      end
+  end
+
+  if selection == 'total'
+    # look in the DB for the seen_count category, 
+    # add up the total numbers in the seen_count category
+    # display the total to the user 
+    puts Animal.sum("seen_count")
+  end
+
 end
